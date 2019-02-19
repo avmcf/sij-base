@@ -93,10 +93,9 @@ public class InterfaceServidor extends Base {
 			properties.put(PropertyIds.NAME, folderName);
 			properties.put(PropertyIds.DESCRIPTION, descricao);
 			properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
-			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacoes"));
-			properties.put("sij:pbcTribunal", tribunal);
-//			properties.put("sij:pbcEdicao", edicao);						sij:pbcEdicao vai sair
-			properties.put("sij:pbcDtEdicao", edicao);
+			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao"));
+			properties.put("sij:pubTribunal", tribunal);
+			properties.put("sij:pubDtEdicao", edicao);
 			edtFolder = documentLibrary.createFolder(properties);
 		}		
 		return edtFolder;
@@ -110,14 +109,20 @@ public class InterfaceServidor extends Base {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(PropertyIds.NAME, getFileName());
 		properties.put(PropertyIds.OBJECT_TYPE_ID, "D:sij:" + edital.getTipoDocumento());
-		properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:cm:generalclassifiable"));
-
+		properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao","P:sij:docJuridico","P:cm:generalclassifiable"));
+		
 		properties.put(PropertyIds.DESCRIPTION, edital.getDescricao());
-		properties.put("sij:edtTribunal",edital.getTribunal());
-		properties.put("sij:edtAtivo",false);
-		properties.put("sij:edtProcesso",edital.getProcesso());
-		properties.put("sij:edtDtEdicao",edital.getDtEdicao());
+		
+		properties.put("sij:docTipo","Publicação");
+		properties.put("sij:docSituacao","Novo");
+		properties.put("sij:docAtivo",false);
 
+		properties.put("sij:pubTribunal",edital.getTribunal());
+		properties.put("sij:pubDtEdicao",edital.getDtEdicao());
+		
+		properties.put("sij:jurProcesso",edital.getProcesso());
+		properties.put("sij:jurTribunal",edital.getTribunal());
+		
 		// prepare content
 		String content = "";
 		String mimetype = "text/plain; charset=UTF-8";
@@ -176,6 +181,8 @@ public class InterfaceServidor extends Base {
 		String idDoc = "";
 		String linha = "";
 		String fileTokens = tribunal+"tokens.txt";
+		
+		int k = 0;
 
 		ItemIterable<QueryResult> results = session.query("select cmis:objectId from cmis:document where cmis:name='" + fileTokens + "'", false);
 		
@@ -194,8 +201,8 @@ public class InterfaceServidor extends Base {
 			while(linha != null){			
 				linha = lerArq.readLine();			
 				if(linha != null) {
-					if(!linha.substring(0, 3).contains("+++")) {					
-						tokens.add(linha);	
+					if(!linha.substring(0, 3).contains("+++")) {	
+						tokens.add(linha);							
 					}				
 				}
 			}		
@@ -206,11 +213,11 @@ public class InterfaceServidor extends Base {
 	public String obtemTribunal(Session session, String pastaId) {
 		
 		String tribunal = null;	
-		String queryString = "select sij:pbcTribunal from sij:publicacoes where cmis:objectId = '" + pastaId + "'";    	
+		String queryString = "select sij:pubTribunal from sij:publicacao where cmis:objectId = '" + pastaId + "'";    	
 		ItemIterable<QueryResult> results = session.query(queryString, false);
 
     	for (QueryResult qResult : results) {
-    		tribunal = qResult.getPropertyValueByQueryName("sij:pbcTribunal").toString();
+    		tribunal = qResult.getPropertyValueByQueryName("sij:pubTribunal").toString();
     	}
 
 		return tribunal;
@@ -280,8 +287,8 @@ public class InterfaceServidor extends Base {
 		descri = obj.getDescription() + "\n" + "TOKEN: " + propConteudo;
 		Map<String, Object> parametro = new HashMap<String, Object>();
 		parametro.put("cm:description",descri);
-		parametro.put("sij:edtToken", token + "\n" + propConteudo);
-		parametro.put("sij:edtAtivo", true);
+		parametro.put("sij:pubToken", token + "\n" + propConteudo);
+		parametro.put("sij:docAtivo", true);
 		obj.updateProperties(parametro, true);	
 	}
 	
