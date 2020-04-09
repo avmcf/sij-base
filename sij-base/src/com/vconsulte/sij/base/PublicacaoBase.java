@@ -1,5 +1,11 @@
 package com.vconsulte.sij.base;
 
+/*
+ * 
+ * NÃO ESTAR EM USO
+ * 
+ */
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,10 +19,14 @@ import org.apache.chemistry.opencmis.client.api.Session;
 public class PublicacaoBase extends Base{
     private static Date edicao;
     private static String tribunal;
+    private static String secao;
+    private static String grupo;
+    private static String assunto;
     private static String strEdicao;
 	private static String sequencial;
 	private static String seqEdicao;
 	private static String strTribunal;
+
     private static String tipoDocumento;
     static Collection<String> strTexto;
 	
@@ -89,5 +99,5 @@ public class PublicacaoBase extends Base{
 	public void setStrTribunal(String strTribunal) {
 		PublicacaoBase.strTribunal = strTribunal;
 	}
-
+	
 }

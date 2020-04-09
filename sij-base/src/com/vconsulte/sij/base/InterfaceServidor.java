@@ -1,7 +1,20 @@
 package com.vconsulte.sij.base;
 
+
+//****************************************************************************************************
+//	Base: Rotinas básicas para o SIJ 	
+//
+//
+//	versao 3 		- 04 de Março de 2020
+//					Versão compativel com o Splitter_3.0
+//
+// 	V&C Consultoria Ltda.
+//	Autor: Arlindo Viana.
+//***************************************************************************************************
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,8 +32,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 //import org.alfresco.util.ISO8601DateFormat;
 //import org.alfresco.service.cmr.repository.NodeService;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -34,17 +50,19 @@ import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.client.util.FileUtils;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
+
 import org.apache.chemistry.opencmis.commons.data.PropertyData;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 
 import com.vconsulte.sij.base.*;
 
 public class InterfaceServidor extends Base {
 	static int k = 0;
 	static Edital edital = new Edital();
+	
 	public static Session serverConnect() {
 		
 		try {
@@ -54,17 +72,18 @@ public class InterfaceServidor extends Base {
 			SessionFactory factory = SessionFactoryImpl.newInstance();
 			Map<String, String> parameter = new HashMap<String, String>();
 
-			// user credentials
+			// Credenciais
 			parameter.put(SessionParameter.USER, getUser());
 			parameter.put(SessionParameter.PASSWORD, getPassword());
 
-			// connection settings
+			// parâmetros da conexao
 			parameter.put(SessionParameter.ATOMPUB_URL, getUrl() + "/alfresco/api/-default-/public/cmis/versions/1.1/atom");
+//			parameter.put(SessionParameter.ATOMPUB_URL, "http://127.0.0.1:8080/alfresco/api/-default-/public/cmis/versions/1.1/atom");
 			parameter.put(SessionParameter.CACHE_SIZE_OBJECTS,"10000");
 			parameter.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
 			parameter.put(SessionParameter.REPOSITORY_ID, "-default-");
 
-			// create session
+			// Inicializar sessão
 			session = factory.createSession(parameter);
 			return session;
 
@@ -93,9 +112,10 @@ public class InterfaceServidor extends Base {
 			properties.put(PropertyIds.NAME, folderName);
 			properties.put(PropertyIds.DESCRIPTION, descricao);
 			properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
-			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao"));
-			properties.put("sij:pubTribunal", tribunal);
-			properties.put("sij:pubDtEdicao", edicao);
+			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacoes"));
+			properties.put("sij:pstTribunal", tribunal);
+			properties.put("sij:pstDtEdicao", edicao.toString());
+			properties.put("sij:pstEdicao", edicao);
 			edtFolder = documentLibrary.createFolder(properties);
 		}		
 		return edtFolder;
@@ -104,7 +124,6 @@ public class InterfaceServidor extends Base {
 	public static boolean incluiEdital(Session session, Folder edtFolder) throws UnsupportedEncodingException {
 
 		Collection<String> texto = new ArrayList<String>();
-
 		// prepare properties
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(PropertyIds.NAME, getFileName());
@@ -118,12 +137,17 @@ public class InterfaceServidor extends Base {
 		properties.put("sij:docAtivo",false);
 
 		properties.put("sij:pubTribunal",edital.getTribunal());
-		properties.put("sij:pubDtEdicao",edital.getDtEdicao());
+		properties.put("sij:pubDtEdicao",edital.getStrEdicao());
+		properties.put("sij:pubVara",edital.getVara());
+		properties.put("sij:pubGrupo",edital.getGrupo());
+		properties.put("sij:pubAssunto",edital.getAssunto());
+		properties.put("sij:pubAtores",edital.getAtores());
 		
-		properties.put("sij:jurProcesso",edital.getProcesso());
+		properties.put("sij:jurNumProcesso",edital.getProcesso());
 		properties.put("sij:jurTribunal",edital.getTribunal());
+		properties.put("sij:jurVara",edital.getVara());
 		
-		// prepare content
+		// preparação do conteúdo do edital
 		String content = "";
 		String mimetype = "text/plain; charset=UTF-8";
 		texto = edital.getTexto();
@@ -134,7 +158,7 @@ public class InterfaceServidor extends Base {
 		ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
 		ContentStream contentStream = session.getObjectFactory().createContentStream(getFileName(), contentBytes.length, mimetype, stream);
 
-		// create the document
+		// criar documento no servidor alfresco
 		Document documento = edtFolder.createDocument(properties, contentStream, VersioningState.MAJOR);
 		
 		if(documento == null) {
@@ -174,15 +198,36 @@ public class InterfaceServidor extends Base {
 		return edicoes;
 	}
 	
+	public String getCargaId(Session session, String path) {
+		
+		String folderId = session.getObjectByPath(path).getId();		
+		return folderId;
+	}
+	
+	public Map<String, String> encontrarEdicoes(Session session, String path) {
+
+		Map<String, String> edicoes = new HashMap<String, String>();		
+		String folderId = session.getObjectByPath(path).getId();
+		Folder folder = (Folder) session.getObject(folderId);		
+		Iterator<CmisObject> it = folder.getChildren().iterator();
+		
+		while(it.hasNext()) {
+			  CmisObject object = it.next();
+			  edicoes.put(object.getPropertyValue("cmis:objectId").toString(), 
+					  object.getPropertyValue("cmis:description").toString());
+		}
+		return edicoes;
+	}
+	
 	public List <String> carregaTokens(Session session, String tribunal) throws NullPointerException, IOException {
-		// Look for Documentos SGJ documents
-		List <String> resultados = new ArrayList<String>();	
+		// 	Look for Documentos SGJ documents
+		//	List <String> resultados = new ArrayList<String>();	
 		List <String> tokens = new ArrayList<String>();
 		String idDoc = "";
 		String linha = "";
 		String fileTokens = tribunal+"tokens.txt";
-		
-		int k = 0;
+
+		String qq = "select cmis:objectId from cmis:document where cmis:name='" + fileTokens + "'";
 
 		ItemIterable<QueryResult> results = session.query("select cmis:objectId from cmis:document where cmis:name='" + fileTokens + "'", false);
 		
@@ -201,7 +246,7 @@ public class InterfaceServidor extends Base {
 			while(linha != null){			
 				linha = lerArq.readLine();			
 				if(linha != null) {
-					if(!linha.substring(0, 3).contains("+++")) {	
+					if(!linha.substring(0, 3).contains("++")) {	
 						tokens.add(linha);							
 					}				
 				}
@@ -213,13 +258,11 @@ public class InterfaceServidor extends Base {
 	public String obtemTribunal(Session session, String pastaId) {
 		
 		String tribunal = null;	
-		String queryString = "select sij:pubTribunal from sij:publicacao where cmis:objectId = '" + pastaId + "'";    	
+		String queryString = "select sij:pstTribunal from sij:publicacoes where cmis:objectId = '" + pastaId + "'";    	
 		ItemIterable<QueryResult> results = session.query(queryString, false);
-
     	for (QueryResult qResult : results) {
-    		tribunal = qResult.getPropertyValueByQueryName("sij:pubTribunal").toString();
+    		tribunal = qResult.getPropertyValueByQueryName("sij:pstTribunal").toString();
     	}
-
 		return tribunal;
 	}
 
@@ -284,21 +327,30 @@ public class InterfaceServidor extends Base {
 
 		if (token== null) token = "";
 
-		descri = obj.getDescription() + "\n" + "TOKEN: " + propConteudo;
+		descri = obj.getDescription() + "\n" + "Token: " + propConteudo;
 		Map<String, Object> parametro = new HashMap<String, Object>();
 		parametro.put("cm:description",descri);
 		parametro.put("sij:pubToken", token + "\n" + propConteudo);
 		parametro.put("sij:docAtivo", true);
-		obj.updateProperties(parametro, true);	
+		obj.updateProperties(parametro, true);
+
 	}
 	
-	public static void moveEditalIndexado(Session session, String docId, String sourcePath, Folder indexFodler) {
+	public static void moveEditalIndexado(Session session, String docId, String sourcePath, Folder indexFolder) {
 
 //		String destinatonPath = "/Sites/advocacia/documentLibrary/Secretaria/Publicacoes/";
-		Folder destinoFolder = indexFodler;	
+		Folder destinoFolder = indexFolder;	
 		Folder origemFolder = (Folder) session.getObjectByPath(sourcePath);
 		Document documento = (Document) session.getObject(docId);
 		documento.move(origemFolder, destinoFolder);
+	}
+	
+	public static void movePublicacao(Session session, String docId, String sourcePath, String destPath) {
+
+		Folder origemFolder = (Folder) session.getObjectByPath(sourcePath);
+		Folder destFolder = (Folder) session.getObjectByPath(destPath);
+		Document documento = (Document) session.getObject(docId);
+		documento.move(origemFolder, destFolder);
 	}
 
 	public static void excluiEdital(Session sessao, String docId) {
@@ -309,5 +361,9 @@ public class InterfaceServidor extends Base {
 	public static void excluiPasta(Session sessao, String folderId) {
 		Folder pasta = (Folder) sessao.getObject(folderId);
 		pasta.delete();
+	}
+	
+	public static void publica() {
+		
 	}
 }
