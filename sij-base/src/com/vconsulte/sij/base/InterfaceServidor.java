@@ -127,21 +127,25 @@ public class InterfaceServidor extends Base {
 		// prepare properties
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(PropertyIds.NAME, getFileName());
-		properties.put(PropertyIds.OBJECT_TYPE_ID, "D:sij:" + edital.getTipoDocumento());
+	//	properties.put(PropertyIds.OBJECT_TYPE_ID, "D:sij:" + edital.getTipoDocumento());
+		properties.put(PropertyIds.OBJECT_TYPE_ID, "D:sij:documento");
 		properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao","P:sij:docJuridico","P:cm:generalclassifiable"));
 		
 		properties.put(PropertyIds.DESCRIPTION, edital.getDescricao());
 		
 		properties.put("sij:docTipo","Publicação");
 		properties.put("sij:docSituacao","Novo");
+		properties.put("sij:docCliente",edital.getCliente());
 		properties.put("sij:docAtivo",false);
-
-		properties.put("sij:pubTribunal",edital.getTribunal());
+		
+		properties.put("sij:pubEdicao",edital.getEdicao());
 		properties.put("sij:pubDtEdicao",edital.getStrEdicao());
+		properties.put("sij:pubTribunal",edital.getTribunal());
 		properties.put("sij:pubVara",edital.getVara());
 		properties.put("sij:pubGrupo",edital.getGrupo());
 		properties.put("sij:pubAssunto",edital.getAssunto());
-		properties.put("sij:pubAtores",edital.getAtores());
+		properties.put("sij:pubAdvogados",edital.getAtores());
+		properties.put("sij:pubIntimados",edital.getIntimados());
 		
 		properties.put("sij:jurNumProcesso",edital.getProcesso());
 		properties.put("sij:jurTribunal",edital.getTribunal());
