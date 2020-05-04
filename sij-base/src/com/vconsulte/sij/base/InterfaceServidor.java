@@ -112,10 +112,13 @@ public class InterfaceServidor extends Base {
 			properties.put(PropertyIds.NAME, folderName);
 			properties.put(PropertyIds.DESCRIPTION, descricao);
 			properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
-			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacoes"));
-			properties.put("sij:pstTribunal", tribunal);
-			properties.put("sij:pstDtEdicao", edicao.toString());
-			properties.put("sij:pstEdicao", edicao);
+			properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao"));
+		//	properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacoes"));
+		//	properties.put("sij:pstTribunal", tribunal);
+			properties.put("sij:pubTribunal", tribunal);
+			properties.put("sij:pubDtEdicao", edicao);
+		//	properties.put("sij:pstDtEdicao", edicao.toString());
+		//	properties.put("sij:pstEdicao", edicao);
 			edtFolder = documentLibrary.createFolder(properties);
 		}		
 		return edtFolder;
@@ -135,17 +138,17 @@ public class InterfaceServidor extends Base {
 		
 		properties.put("sij:docTipo","Publicação");
 		properties.put("sij:docSituacao","Novo");
-		properties.put("sij:docCliente",edital.getCliente());
+	//	properties.put("sij:docCliente",edital.getCliente());
 		properties.put("sij:docAtivo",false);
 		
-		properties.put("sij:pubEdicao",edital.getEdicao());
-		properties.put("sij:pubDtEdicao",edital.getStrEdicao());
+	//	properties.put("sij:pubEdicao",edital.getEdicao());
+	//	properties.put("sij:pubDtEdicao",edital.getStrEdicao());
 		properties.put("sij:pubTribunal",edital.getTribunal());
-		properties.put("sij:pubVara",edital.getVara());
+	//	properties.put("sij:pubVara",edital.getVara());
 		properties.put("sij:pubGrupo",edital.getGrupo());
 		properties.put("sij:pubAssunto",edital.getAssunto());
-		properties.put("sij:pubAdvogados",edital.getAtores());
-		properties.put("sij:pubIntimados",edital.getIntimados());
+	//	properties.put("sij:pubAdvogados",edital.getAtores());
+	//	properties.put("sij:pubIntimados",edital.getIntimados());
 		
 		properties.put("sij:jurNumProcesso",edital.getProcesso());
 		properties.put("sij:jurTribunal",edital.getTribunal());
@@ -262,10 +265,12 @@ public class InterfaceServidor extends Base {
 	public String obtemTribunal(Session session, String pastaId) {
 		
 		String tribunal = null;	
-		String queryString = "select sij:pstTribunal from sij:publicacoes where cmis:objectId = '" + pastaId + "'";    	
+		//String queryString = "select sij:pstTribunal from sij:publicacoes where cmis:objectId = '" + pastaId + "'";   
+		String queryString = "select sij:pubTribunal from sij:publicacao where cmis:objectId = '" + pastaId + "'";
 		ItemIterable<QueryResult> results = session.query(queryString, false);
     	for (QueryResult qResult : results) {
-    		tribunal = qResult.getPropertyValueByQueryName("sij:pstTribunal").toString();
+    		//tribunal = qResult.getPropertyValueByQueryName("sij:pstTribunal").toString();
+    		tribunal = qResult.getPropertyValueByQueryName("sij:pubTribunal").toString();
     	}
 		return tribunal;
 	}
