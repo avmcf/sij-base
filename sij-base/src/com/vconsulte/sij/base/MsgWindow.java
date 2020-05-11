@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
+import com.vconsulte.sij.base.*;
 
 public class MsgWindow extends JFrame implements ActionListener {
 	
@@ -22,12 +22,13 @@ public class MsgWindow extends JFrame implements ActionListener {
 	private JScrollPane scrollTexto = new JScrollPane(areaTexto);
 	private JPanel textoPanel = new JPanel();
 	private JLabel lbl = new JLabel();
+	static String versaoSplitter = com.vconsulte.sij.base.Parametros.VERSAOSPLITER;
 
 	// construtor
 	public MsgWindow() {
 		super("dpk");
 		this.setSize(600, 500);
-		this.setTitle("V&C SplitDO v2.3.20");
+		this.setTitle(versaoSplitter);
 		this.setFont(new Font("Times", 0, 11));
 		this.setResizable(false);
 		int policy = scrollTexto.getVerticalScrollBarPolicy(); scrollTexto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 

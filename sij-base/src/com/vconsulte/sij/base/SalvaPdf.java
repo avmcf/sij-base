@@ -47,9 +47,9 @@ public class SalvaPdf extends Base  {
 		
 		String nomeArquivo = getFileName();
 		
-		destino = "/Volumes/Publicacoes/" + nomeArquivo;
+		//destino = "/Volumes/Publicacoes/" + nomeArquivo;
 		//destino = "/Users/avmcf/vms/shared/teste/" + nomeArquivo;
-		//destino = "/Users/avmcf/sij/saida_editais/" + nomeArquivo;
+		destino = "/Users/avmcf/sij/saida_editais/" + nomeArquivo;
 		
 		PdfDocument pdfDocumento = new PdfDocument(new PdfWriter(destino));
 		Document documento = new Document(pdfDocumento);
