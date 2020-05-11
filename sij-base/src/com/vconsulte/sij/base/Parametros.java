@@ -14,6 +14,7 @@ public class Parametros {
     
     public static final String FONTSIZE 				= "9";
     public static final String FONT 					= "HELVETICA";
+    public static final String FONTCOLOR 				= "BLUE";
     
     public static String URL 							= "";	
     public static String CLIENTE 						= "V&C Consultoria Ltda";			
