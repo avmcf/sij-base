@@ -12,6 +12,9 @@ public class Parametros {
     public static final String BASEFOLDER 				= "/Sites/advocacia/documentLibrary/secretaria/carregamento";
     public static final String VERSAOSPLITER 			= "v2.3.21b";
     
+    public static final String FONTSIZE 				= "9";
+    public static final String FONT 					= "HELVETICA";
+    
     public static String URL 							= "";	
     public static String CLIENTE 						= "V&C Consultoria Ltda";			
     public static String TIPOSAIDA 						= "TEXTO";						
