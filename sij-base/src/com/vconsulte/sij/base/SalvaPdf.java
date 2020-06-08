@@ -46,6 +46,7 @@ public class SalvaPdf extends Base  {
 	public static void gravaPdf() throws IOException {
 		
 		String nomeArquivo = getFileName();
+		String nome = "";
 		
 		//destino = "/Volumes/Publicacoes/" + nomeArquivo;
 		//destino = "/Users/avmcf/vms/shared/teste/" + nomeArquivo;

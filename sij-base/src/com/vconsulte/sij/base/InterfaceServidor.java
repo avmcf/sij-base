@@ -145,6 +145,7 @@ public class InterfaceServidor extends Base {
 	//	properties.put("sij:pubDtEdicao",edital.getStrEdicao());
 		properties.put("sij:pubTribunal",edital.getTribunal());
 	//	properties.put("sij:pubVara",edital.getVara());
+		properties.put("sij:pubSecao",edital.getVara());
 		properties.put("sij:pubGrupo",edital.getGrupo());
 		properties.put("sij:pubAssunto",edital.getAssunto());
 	//	properties.put("sij:pubAdvogados",edital.getAtores());

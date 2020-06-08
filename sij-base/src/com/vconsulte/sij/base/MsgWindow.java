@@ -28,7 +28,7 @@ public class MsgWindow extends JFrame implements ActionListener {
 	public MsgWindow() {
 		super("dpk");
 		this.setSize(600, 500);
-		this.setTitle(versaoSplitter);
+		this.setTitle("V&C - Separador de Publicações - " + versaoSplitter);
 		this.setFont(new Font("Times", 0, 11));
 		this.setResizable(false);
 		int policy = scrollTexto.getVerticalScrollBarPolicy(); scrollTexto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
