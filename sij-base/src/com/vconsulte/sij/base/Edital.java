@@ -24,6 +24,7 @@ public class Edital extends Base{
     private static String strEdicao;
     private static String cliente;
     private static String folder;
+    private static String label;
     
     // parametros para o texto
 	private static String titulo1;
@@ -225,6 +226,14 @@ public class Edital extends Base{
 
 	public void setFolder(String setFolder) {
 		Edital.folder = setFolder;
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String setLabel) {
+		Edital.label = setLabel;
 	}
 	
 }

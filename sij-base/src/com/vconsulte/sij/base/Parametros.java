@@ -9,8 +9,8 @@ public class Parametros {
 	public static final String USUARIO 					= "sgj";
     public static final String PASSWORD 				= "934769386";
     public static final String TIPODOCUMENTO 			= "publicacao";
-    public static final String BASEFOLDER 				= "/Sites/advocacia/documentLibrary/secretaria/carregamento";
-    public static final String VERSAOSPLITER 			= "v2.3.21b";
+    
+    public static final String VERSAOSPLITER 			= "v2.3.21c";
     
     public static final String FONTSIZE 				= "9";
     public static final String FONT 					= "HELVETICA";
@@ -21,6 +21,8 @@ public class Parametros {
     public static String TIPOSAIDA 						= "TEXTO";						
     public static String SYSOP 							= "LINUX";
     public static String LOGFOLDER 						= "";
+    public static String PASTABASE 						= "/Sites/advocacia/documentLibrary/secretaria/carregamento";
+    public static String PASTAINDEXADOS 				= "/Sites/advocacia/documentLibrary/secretaria/publicacoes";
     
     public static List <String> TABELAUTORES = new ArrayList<String>();
     public static List <String> JURIDIQUES = new ArrayList<String>();
@@ -29,9 +31,16 @@ public class Parametros {
     public static List <String> KEYWORDS = new ArrayList<String>();
     public static List <String> FUNCOES = new ArrayList<String>();
     public static List <String> CONTINUADORES = new ArrayList<String>();
+    public static List <String> FORMATODATAS = new ArrayList<String>();
+    public static List <String> MESES = new ArrayList<String>();
 
 	public static void carregaTabelas() { 
 		
+		MESES.add("janeiro"); MESES.add("fevereiro"); MESES.add("marco"); 
+		MESES.add("abril"); MESES.add("maio"); MESES.add("junho");
+		MESES.add("julho"); MESES.add("agosto"); MESES.add("setembro");
+		MESES.add("outubro"); MESES.add("novembro"); MESES.add("dezembro");
+
 		CONTINUADORES.add("ao"); CONTINUADORES.add("como"); CONTINUADORES.add("e");
 		CONTINUADORES.add("da"); CONTINUADORES.add("das"); CONTINUADORES.add("de");
 		CONTINUADORES.add("desse"); CONTINUADORES.add("desses"); CONTINUADORES.add("deste");
@@ -39,8 +48,11 @@ public class Parametros {
 		
 		FUNCOES.add("chefe da secretaria"); FUNCOES.add("desembargadora relatora"); FUNCOES.add("desembargadora");
 		FUNCOES.add("desembargador relator"); FUNCOES.add("desembargador"); FUNCOES.add("desembargador(a)");
-		FUNCOES.add("diretor de secretaria"); FUNCOES.add("diretora de secretaria"); FUNCOES.add("juiza titular");
-		FUNCOES.add("juiz titular"); FUNCOES.add("juiz(a) do trabalho titular"); FUNCOES.add("secao de recursos");
+		FUNCOES.add("desembargador(a) vice presidente judicial"); FUNCOES.add("desembargador vice presidente judicial");
+		FUNCOES.add("desembargadora vice presidente judicial"); FUNCOES.add("diretor de secretaria");
+		FUNCOES.add("diretora de secretaria"); FUNCOES.add("juiza titular"); FUNCOES.add("juiz titular");
+		FUNCOES.add("juiz(a) do trabalho titular"); FUNCOES.add("juiza do trabalho titular");
+		FUNCOES.add("juiz do trabalho titular"); 
 		FUNCOES.add("secretaria"); FUNCOES.add("tecnico judiciario");
 		
 		TABELAUTORES.add("advogado"); TABELAUTORES.add("advogados");  TABELAUTORES.add("agravado");
@@ -120,6 +132,8 @@ public class Parametros {
     	KEYWORDS.add("funcionario");
     	KEYWORDS.add("funcionarios");
     	KEYWORDS.add("inciso");
+    	KEYWORDS.add("interessado");
+    	KEYWORDS.add("interessados");
 		KEYWORDS.add("intimado");
 		KEYWORDS.add("intimados");
 		KEYWORDS.add("indenizacao");
@@ -333,6 +347,7 @@ public class Parametros {
 		JURIDIQUES.add("recurso ordinario obreiro");
 		JURIDIQUES.add("recesso");
 		JURIDIQUES.add("recisao");
+		JURIDIQUES.add("secao de recursos");
 		JURIDIQUES.add("sentenca");
 		JURIDIQUES.add("trabalho");
 		JURIDIQUES.add("trt");
@@ -636,8 +651,15 @@ public class Parametros {
 		STOPWORDS.add("sera"); 
 		STOPWORDS.add("quais");
 		
+		// - Formatos de datas
+		// dd/mm/aaaa
+		FORMATODATAS.add("(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19|20)\\d{2}");			// dd/mm/aaaa
 		
-
-    }
+		//aaaammdd
+		FORMATODATAS.add("\"^(?:(?:(?:(?:[13579][26]|[2468][048])00)|(?:[0-9]{2}(?:(?:[13579][26])|(?:[2468][048]|0[48]))))(?:(?:(?:09|04|06|11)(?:0[1-9]|1[0-9]|2[0-9]|30))|(?:(?:01|03|05|07|08|10|12)(?:0[1-9]|1[0-9]|2[0-9]|3[01]))|(?:02(?:0[1-9]|1[0-9]|2[0-9]))))|(?:[0-9]{4}(?:(?:(?:09|04|06|11)(?:0[1-9]|1[0-9]|2[0-9]|30))|(?:(?:01|03|05|07|08|10|12)(?:0[1-9]|1[0-9]|2[0-9]|3[01]))|(?:02(?:[01][0-9]|2[0-8]))))$\"");
+		
+		//dd/mm/aaaa
+		FORMATODATAS.add("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$");
+	}
     
 }

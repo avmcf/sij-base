@@ -76,6 +76,11 @@ public class InterfaceServidor extends Base {
 			parameter.put(SessionParameter.USER, getUser());
 			parameter.put(SessionParameter.PASSWORD, getPassword());
 
+			String ur = getUrl();
+			String us = getUser();
+			String ps = getPassword();
+			String xx = ur + "/alfresco/api/-default-/public/cmis/versions/1.1/atom";
+			
 			// parâmetros da conexao
 			parameter.put(SessionParameter.ATOMPUB_URL, getUrl() + "/alfresco/api/-default-/public/cmis/versions/1.1/atom");
 //			parameter.put(SessionParameter.ATOMPUB_URL, "http://127.0.0.1:8080/alfresco/api/-default-/public/cmis/versions/1.1/atom");
@@ -135,6 +140,7 @@ public class InterfaceServidor extends Base {
 		properties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, Arrays.asList("P:sij:publicacao","P:sij:docJuridico","P:cm:generalclassifiable"));
 		
 		properties.put(PropertyIds.DESCRIPTION, edital.getDescricao());
+		properties.put(PropertyIds.VERSION_LABEL, edital.getLabel());
 		
 		properties.put("sij:docTipo","Publicação");
 		properties.put("sij:docSituacao","Novo");
