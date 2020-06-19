@@ -10,7 +10,7 @@ public class Parametros {
     public static final String PASSWORD 				= "934769386";
     public static final String TIPODOCUMENTO 			= "publicacao";
     
-    public static final String VERSAOSPLITER 			= "v2.3.21c";
+    public static final String VERSAOSPLITER 			= "v2.3.21d";
     
     public static final String FONTSIZE 				= "9";
     public static final String FONT 					= "HELVETICA";
